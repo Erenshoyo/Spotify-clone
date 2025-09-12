@@ -1,18 +1,18 @@
-.border{
-    border: 2px solid red;
-    margin: 3px;
+.border {
+  border: 2px solid red;
+  margin: 3px;
 }
 
-.flex{
-    display: flex;
+.flex {
+  display: flex;
 }
 
-.justify-center{
-    justify-content: center;
+.justify-center {
+  justify-content: center;
 }
 
-.items-center{
-    align-items: center;
+.items-center {
+  align-items: center;
 }
 
 .bg-black {
@@ -35,4 +35,30 @@
 
 .p-1 {
   padding: 10px;
+}
+
+/* Works in Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* for horizontal scroll */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* hides the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3); /* subtle white overlay */
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.6); /* brighter on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
