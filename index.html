@@ -12,7 +12,7 @@
       <div class="left">
         <div class="home bg-gray rounded m-1 p-1">
           <div class="logo">
-            <img class="invert" src="img/logo.svg" alt="logo" />
+            <img class="invert" width="110px" src="img/logo.svg" alt="logo" />
           </div>
           <ul>
             <li><img class="invert" src="img/home.svg" alt="home" />Home</li>
@@ -28,9 +28,7 @@
           </div>
 
           <div class="songList">
-            <ul>
-              
-            </ul>
+            <ul></ul>
           </div>
 
           <div class="footer">
@@ -133,23 +131,29 @@
           </div>
 
           <div class="playbar">
-            <div class="songinfo"></div>
-            <div class="songbuttons">
-              <img src="img/prevsong.svg" alt="" />
-              <img
-                style="
-                  border: 2px solid black;
-                  border-radius: 100%;
-                  padding: 3px;
-                  width: 18px;
-                  height: 20px;
-                "
-                src="img/play.svg"
-                alt=""
-              />
-              <img src="img/nextsong.svg" alt="" />
+            <div class="seekbar">
+              <div class="circle"></div>
             </div>
-            <div class="songtime"></div>
+            <div class="abovebar">
+              <div class="songinfo"></div>
+              <div class="songbuttons">
+                <img id="previous" src="img/prevsong.svg" alt="" />
+                <img
+                  id="play"
+                  style="
+                    border: 2px solid black;
+                    border-radius: 100%;
+                    padding: 3px;
+                    width: 18px;
+                    height: 20px;
+                  "
+                  src="img/play.svg"
+                  alt=""
+                />
+                <img id="next" src="img/nextsong.svg" alt="" />
+              </div>
+              <div class="songtime"></div>
+            </div>
           </div>
         </div>
       </div>
