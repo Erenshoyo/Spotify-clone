@@ -62,3 +62,56 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: white; /* fallback */
+  outline: none;
+  cursor: pointer;
+}
+
+/* Chrome / Safari / Edge */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    black 0%,
+    black var(--val, 50%),   /* filled part */
+    white var(--val, 50%),
+    white 100%               /* empty part */
+  );
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+  margin-top: -4px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: white; /* empty part */
+}
+input[type="range"]::-moz-range-progress {
+  background: black; /* filled part */
+  height: 6px;
+  border-radius: 3px;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+}
