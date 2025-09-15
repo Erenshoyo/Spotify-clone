@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
-
+:root {
+  --a: 0;
+}
 * {
   margin: 0;
   padding: 0;
@@ -106,9 +108,10 @@ body {
   transition: all 0.5s;
 }
 
-.card:hover{
-  background-color:rgb(54, 54, 54);
+.card:hover {
+  background-color: rgb(54, 54, 54);
   cursor: pointer;
+  --a: 1;
 }
 
 .card > * {
@@ -133,7 +136,7 @@ body {
   position: absolute;
   top: 168px;
   right: 17px;
-  opacity: 0;
+  opacity: var(--a);
   transition: all 1s ease-out;
 }
 
@@ -270,13 +273,12 @@ body {
   text-overflow: ellipsis;
 }
 
-
 .songtime {
   color: black;
   width: 100px;
 }
 
-.volume{
+.volume {
   display: flex;
   justify-content: center;
   align-items: center;

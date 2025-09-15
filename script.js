@@ -1,5 +1,6 @@
 let currentSong = new Audio();
 let songs;
+let currentFolder;
 
 function secondsToMinutesSeconds(seconds) {
   if (isNaN(seconds) || seconds < 0) {
@@ -15,40 +16,25 @@ function secondsToMinutesSeconds(seconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
-async function getSongs() {
-  let a = await fetch("http://127.0.0.1:5500/songs/");
+async function getSongs(folder) {
+  currentFolder = folder;
+  let a = await fetch(`http://127.0.0.1:5500/${folder}/`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
   let as = div.getElementsByTagName("a");
-  let songs = [];
+  songs = [];
   for (let i = 0; i < as.length; i++) {
     const element = as[i];
     if (element.href.endsWith(".mp3")) {
-      songs.push(element.href.split("/songs/")[1]);
+      songs.push(element.href.split(`/${folder}/`)[1]);
     }
   }
-  return songs;
-}
-
-const playMusic = (track, pause = false) => {
-  //let audio = new Audio("/songs/" + track);
-  currentSong.src = "/songs/" + track;
-  if (!pause) {
-    currentSong.play();
-    play.src = "img/pause.svg";
-  }
-  document.querySelector(".songinfo").innerHTML = decodeURI(track);
-  document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
-};
-
-async function main() {
-  songs = await getSongs();
-  playMusic(songs[0], true);
-
   let songUL = document
     .querySelector(".songList")
     .getElementsByTagName("ul")[0];
+
+  songUL.innerHTML = "";
 
   for (const song of songs) {
     songUL.innerHTML =
@@ -74,6 +60,46 @@ async function main() {
       playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
     });
   });
+}
+
+const playMusic = (track, pause = false) => {
+  //let audio = new Audio("/songs/" + track);
+  currentSong.src = `/${currentFolder}/` + track;
+  if (!pause) {
+    currentSong.play();
+    play.src = "img/pause.svg";
+  }
+  document.querySelector(".songinfo").innerHTML = decodeURI(track);
+  document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+};
+
+async function displayAlbums() {
+  let a = await fetch(`http://127.0.0.1:5500/songs/`);
+  let response = await a.text();
+  let div = document.createElement("div");
+  div.innerHTML = response;
+
+  let anchors = div.getElementsByTagName("a");
+  let folders = [];
+
+  Array.from(anchors).forEach(async (e) => {
+    if (e.href.includes("/songs")) {
+      console.log(e.href.split("/").slice(-1)[0])
+      let folder = e.href.split("/").slice(-1)[0];
+      
+
+      //Get the metadata of the folder
+      let a = await fetch(`http://127.0.0.1:5500/songs/${folder}/info.json`);
+      let response = await a.json();
+    }
+  });
+}
+
+async function main() {
+  await getSongs("songs/fol1");
+  playMusic(songs[0], true);
+
+  displayAlbums();
 
   play.addEventListener("click", () => {
     if (currentSong.paused) {
@@ -127,8 +153,14 @@ async function main() {
     .addEventListener("change", (e) => {
       currentSong.volume = parseInt(e.target.value) / 100;
     });
+
+  Array.from(document.getElementsByClassName("card")).forEach((e) => {
+    e.addEventListener("click", async (item) => {
+      songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
+    });
+  });
 }
 
 main();
 
-//Next we will start from 4:04:45
+//Next we will start from 4:29:00. Also need to debug displayAlbums().
