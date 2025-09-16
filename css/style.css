@@ -283,8 +283,11 @@ body {
   justify-content: center;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
 }
-
+.range input {
+  cursor: pointer;
+}
 .abovebar {
   display: flex;
   align-items: center;

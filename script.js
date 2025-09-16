@@ -56,7 +56,7 @@ async function getSongs(folder) {
     document.querySelector(".songList").getElementsByTagName("li")
   ).forEach((e) => {
     e.addEventListener("click", (element) => {
-      console.log(e.querySelector(".info").firstElementChild.innerHTML);
+      //console.log(e.querySelector(".info").firstElementChild.innerHTML);
       playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
     });
   });
@@ -74,24 +74,63 @@ const playMusic = (track, pause = false) => {
 };
 
 async function displayAlbums() {
-  let a = await fetch(`http://127.0.0.1:5500/songs/`);
+  let a = await fetch("http://127.0.0.1:5500/songs/");
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
 
   let anchors = div.getElementsByTagName("a");
-  let folders = [];
+  let cardContainer = document.querySelector(".cardContainer");
 
-  Array.from(anchors).forEach(async (e) => {
-    if (e.href.includes("/songs")) {
-      console.log(e.href.split("/").slice(-1)[0])
-      let folder = e.href.split("/").slice(-1)[0];
-      
+  for (let e of anchors) {
+    let folder = e.href.split("/").slice(-1)[0].trim();
 
-      //Get the metadata of the folder
+    // Skip invalid cases
+    if (!folder || folder === "songs" || folder.includes(".")) continue;
+
+    try {
       let a = await fetch(`http://127.0.0.1:5500/songs/${folder}/info.json`);
+      if (!a.ok) {
+        console.warn(`Missing info.json in ${folder}`);
+        continue;
+      }
       let response = await a.json();
+      //console.log("Album metadata:", response);
+      cardContainer.innerHTML =
+        cardContainer.innerHTML +
+        `<div data-folder="${folder}" class="card">
+              <div class="play">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 20V4L19 12L5 20Z"
+                    stroke="#141B34"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                    fill="#000"
+                  />
+                </svg>
+              </div>
+              <img
+                src="/songs/${folder}/cover.jpeg"
+                alt=""
+              />
+              <h2>${response.title}</h2>
+              <p>${response.description}</p>
+            </div>`;
+    } catch (err) {
+      console.error(`Error in ${folder}:`, err);
     }
+  }
+  Array.from(document.getElementsByClassName("card")).forEach((e) => {
+    e.addEventListener("click", async (item) => {
+      songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
+    });
   });
 }
 
@@ -112,7 +151,7 @@ async function main() {
   });
 
   currentSong.addEventListener("timeupdate", () => {
-    console.log(currentSong.currentTime, currentSong.duration);
+    //console.log(currentSong.currentTime, currentSong.duration);
     document.querySelector(".songtime").innerHTML = `${secondsToMinutesSeconds(
       currentSong.currentTime
     )} / ${secondsToMinutesSeconds(currentSong.duration)}`;
@@ -154,13 +193,23 @@ async function main() {
       currentSong.volume = parseInt(e.target.value) / 100;
     });
 
-  Array.from(document.getElementsByClassName("card")).forEach((e) => {
-    e.addEventListener("click", async (item) => {
-      songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
-    });
+  document.querySelector(".volume>img").addEventListener("click", (e) => {
+    if (e.target.src.includes("volume.svg")) {
+      e.target.src = e.target.src.replace("volume.svg", "mute.svg");
+      currentSong.volume = 0;
+      document
+        .querySelector(".range")
+        .getElementsByTagName("input")[0].value = 0;
+    } else {
+      e.target.src = e.target.src.replace("mute.svg", "volume.svg");
+      currentSong.volume = 0.1;
+      document
+        .querySelector(".range")
+        .getElementsByTagName("input")[0].value = 10;
+    }
   });
 }
 
 main();
 
-//Next we will start from 4:29:00. Also need to debug displayAlbums().
+
